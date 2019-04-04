@@ -12,6 +12,7 @@ namespace Joomla\Component\Menus\Administrator\Field;
 defined('JPATH_BASE') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Fields\FieldsServiceInterface;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Utilities\ArrayHelper;
@@ -44,15 +45,12 @@ class ComponentsFieldsField extends \JFormFieldList
 	{
 		// Initialise variable.
 		$db = Factory::getDbo();
-		
-		$search = $db->quote('%"custom_fields_enable":"1"%', false);
 
 		$query = $db->getQuery(true)
 			->select('DISTINCT a.name AS text, a.element AS value')
 			->from('#__extensions as a')
 			->where('a.enabled >= 1') 
-			->where('a.type =' . $db->quote('component'))
-			->where('a.params like ' . $search);
+			->where('a.type =' . $db->quote('component'));
 
 		$items = $db->setQuery($query)->loadObjectList();
 
@@ -60,20 +58,30 @@ class ComponentsFieldsField extends \JFormFieldList
 		{
 			$lang = Factory::getLanguage();
 
+			$supportFields = [];
+			
 			foreach ($items as &$item)
 			{
-				// Load language
-				$extension = $item->value;
-				$source = JPATH_ADMINISTRATOR . '/components/' . $extension;
-				$lang->load("$extension.sys", JPATH_ADMINISTRATOR, null, false, true)
-					|| $lang->load("$extension.sys", $source, null, false, true);
+				$extension = $item->value; 
+				
+				$component = Factory::getApplication()->bootComponent($extension);
 
-				// Translate component name
-				$item->text = Text::_($item->text);
+				if ($component instanceof FieldsServiceInterface)
+				{
+					// Load language
+					$source = JPATH_ADMINISTRATOR . '/components/' . $extension;
+					$lang->load("$extension.sys", JPATH_ADMINISTRATOR, null, false, true)
+						|| $lang->load("$extension.sys", $source, null, false, true);
+
+					// Translate component name
+					$item->text = Text::_($item->text);
+					
+					$supportFields[]  = $item;
+				}
 			}
 
 			// Sort by component name
-			$items = ArrayHelper::sortObjects($items, 'text', 1, true, true);
+			$items = ArrayHelper::sortObjects($supportFields, 'text', 1, true, true);
 		}
 
 		// Merge any additional options in the XML definition.
