@@ -90,6 +90,10 @@ if ($params->get('articles_layout') == 1) {
 
                         <?php endif; ?>
 
+                        <?php if (in_array($params->get('img_intro_full'), ['intro', 'full']) && !empty($item->imageSrc)) : ?>
+                            <?php echo LayoutHelper::render('joomla.content.' . $params->get('img_intro_full') . '_image', $item); ?>
+                        <?php endif; ?>
+
                         <?php if ($params->get('show_tags', 0) && $item->tags->itemTags) : ?>
                             <div class="mod-articles-tags">
                                 <?php echo LayoutHelper::render('joomla.content.tags', $item->tags->itemTags); ?>
@@ -104,23 +108,6 @@ if ($params->get('articles_layout') == 1) {
                             <?php echo LayoutHelper::render('joomla.content.readmore', ['item' => $item, 'params' => $item->params, 'link' => $item->link]); ?>
                         <?php endif; ?>
                     </div>
-                <?php endif; ?>
-
-                <?php if ($params->get('img_intro_full') !== 'none' && !empty($item->imageSrc)) : ?>
-                    <figure class="mod-articles-image">
-                        <?php echo LayoutHelper::render(
-                            'joomla.html.image',
-                            [
-                                'src' => $item->imageSrc,
-                                'alt' => $item->imageAlt,
-                            ]
-                        ); ?>
-                        <?php if (!empty($item->imageCaption)) : ?>
-                            <figcaption>
-                                <?php echo $item->imageCaption; ?>
-                            </figcaption>
-                        <?php endif; ?>
-                    </figure>
                 <?php endif; ?>
             </article>
         </li>

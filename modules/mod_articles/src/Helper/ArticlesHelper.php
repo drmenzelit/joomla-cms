@@ -273,27 +273,20 @@ class ArticlesHelper implements DatabaseAwareInterface
 
             // Show the Intro/Full image field of the article
             if ($params->get('img_intro_full') !== 'none') {
-                $images             = json_decode($item->images);
+                $images             = (new Registry($item->images))->toObject();
                 $item->imageSrc     = '';
-                $item->imageAlt     = '';
-                $item->imageCaption = '';
 
                 if ($params->get('img_intro_full') === 'intro' && !empty($images->image_intro)) {
                     $item->imageSrc = htmlspecialchars($images->image_intro, ENT_COMPAT, 'UTF-8');
-                    $item->imageAlt = htmlspecialchars($images->image_intro_alt, ENT_COMPAT, 'UTF-8');
-
-                    if (!empty($images->image_intro_caption)) {
-                        $item->imageCaption = htmlspecialchars($images->image_intro_caption, ENT_COMPAT, 'UTF-8');
-                    }
+                    $images->float_intro = 'mod-articles-image';
                 } elseif ($params->get('img_intro_full') === 'full' && !empty($images->image_fulltext)) {
                     $item->imageSrc = htmlspecialchars($images->image_fulltext, ENT_COMPAT, 'UTF-8');
-                    $item->imageAlt = htmlspecialchars($images->image_fulltext_alt, ENT_COMPAT, 'UTF-8');
-
-                    if (!empty($images->image_fulltext_caption)) {
-                        $item->imageCaption = htmlspecialchars($images->image_fulltext_caption, ENT_COMPAT, 'UTF-8');
-                    }
+                    $images->float_fulltext = 'mod-articles-image';
                 }
+
+                $item->images = json_encode($images);
             }
+
             $item->displayReadmore  = $item->alternative_readmore;
         }
 
