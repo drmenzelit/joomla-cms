@@ -217,9 +217,11 @@ class ArticlesHelper implements DatabaseAwareInterface
         foreach ($items as &$item) {
             $item->slug = $item->id . ':' . $item->alias;
 
+            $articleLink = Route::_(RouteHelper::getArticleRoute($item->slug, $item->catid, $item->language));
+
             if ($access || \in_array($item->access, $authorised)) {
                 // We know that user has the privilege to view the article
-                $item->link = Route::_(RouteHelper::getArticleRoute($item->slug, $item->catid, $item->language));
+                $item->link = $articleLink;
             } else {
                 $menu      = $app->getMenu();
                 $menuitems = $menu->getItems('link', 'index.php?option=com_users&view=login');
@@ -231,7 +233,9 @@ class ArticlesHelper implements DatabaseAwareInterface
                     $Itemid = $input->getInt('Itemid');
                 }
 
-                $item->link = Route::_('index.php?option=com_users&view=login&Itemid=' . $Itemid);
+                $return = base64_encode($articleLink);
+
+                $item->link = Route::_('index.php?option=com_users&view=login&Itemid=' . $Itemid . '&return=' . $return);
             }
 
             // Used for styling the active article

@@ -102,23 +102,7 @@ if ($params->get('articles_layout') == 1) {
 
                         <?php if ($params->get('show_readmore')) : ?>
                             <p class="mod-articles-readmore">
-
-                                <a class="btn btn-secondary" href="<?php echo $item->link; ?>">
-                                    <?php if ($item->params->get('access-view') == false) : ?>
-                                        <?php echo Text::_('MOD_ARTICLES_REGISTER_TO_READ_MORE'); ?>
-                                    <?php elseif ($item->alternative_readmore) : ?>
-                                        <?php echo $item->alternative_readmore; ?>
-                                        <?php echo HTMLHelper::_('string.truncate', $item->title, $params->get('readmore_limit')); ?>
-                                            <?php if ($params->get('show_readmore_title', 0)) : ?>
-                                                <?php echo HTMLHelper::_('string.truncate', $item->title, $params->get('readmore_limit')); ?>
-                                            <?php endif; ?>
-                                    <?php elseif ($params->get('show_readmore_title', 0)) : ?>
-                                        <?php echo Text::_('MOD_ARTICLES_READ_MORE'); ?>
-                                        <?php echo HTMLHelper::_('string.truncate', $item->title, $params->get('readmore_limit')); ?>
-                                    <?php else : ?>
-                                        <?php echo Text::_('MOD_ARTICLES_READ_MORE_TITLE'); ?>
-                                    <?php endif; ?>
-                                </a>
+                                <?php echo LayoutHelper::render('joomla.content.readmore', ['item' => $item, 'params' => $item->params, 'link' => $item->link]); ?>
                             </p>
                         <?php endif; ?>
                     </div>
