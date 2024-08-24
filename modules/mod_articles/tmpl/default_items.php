@@ -101,9 +101,7 @@ if ($params->get('articles_layout') == 1) {
                         <?php endif; ?>
 
                         <?php if ($params->get('show_readmore')) : ?>
-                            <p class="mod-articles-readmore">
-                                <?php echo LayoutHelper::render('joomla.content.readmore', ['item' => $item, 'params' => $item->params, 'link' => $item->link]); ?>
-                            </p>
+                            <?php echo LayoutHelper::render('joomla.content.readmore', ['item' => $item, 'params' => $item->params, 'link' => $item->link]); ?>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
