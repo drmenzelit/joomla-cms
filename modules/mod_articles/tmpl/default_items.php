@@ -97,7 +97,7 @@ if ($params->get('articles_layout') == 1) {
                         <?php endif; ?>
 
                         <?php if ($params->get('show_introtext')) : ?>
-                            <p><?php echo $item->displayIntrotext; ?></p>
+                            <?php echo $item->displayIntrotext; ?>
                         <?php endif; ?>
 
                         <?php if ($params->get('show_readmore')) : ?>
