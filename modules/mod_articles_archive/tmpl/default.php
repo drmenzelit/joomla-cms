@@ -15,7 +15,7 @@ if (!$list) {
 }
 
 ?>
-<ul class="mod-articlesarchive archive-module mod-list test">
+<ul class="mod-articlesarchive archive-module mod-list">
     <?php foreach ($list as $item) : ?>
     <li>
         <a href="<?php echo $item->link; ?>">
